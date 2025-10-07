@@ -3,32 +3,78 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>MyTakaful – Perlindungan Pintar Keluarga</title>
-  <meta name="description" content="MyTakaful — Platform ringkas untuk penerangan pelan takaful, medical card, hibah, dan temujanji pantas melalui WhatsApp." />
-  <meta property="og:title" content="MyTakaful – Perlindungan Pintar Keluarga" />
-  <meta property="og:description" content="Info ringkas, pelan jelas, dan tindakan pantas. Hubungi kami untuk semakan pelan peribadi anda." />
-  <meta property="og:type" content="website" />
+  <title>Prudential Takaful + Mini Arcade — Floating</title>
+  <meta name="description" content="Prudential Takaful + Mini Arcade 4‑in‑1 dalam satu halaman. Arcade terapung macam business card." />
   <meta name="theme-color" content="#0ea5e9" />
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
     html{scroll-behavior:smooth}
     .container{max-width:1100px}
-    .img-cover{object-fit:cover;object-position:center}
+
+    /* ================= Kad 3D berisi (extruded) ================= */
+    :root { --thk: 14px; }
+    .scene { perspective: 1400px; }
+    .card3d { position: relative; transform-style: preserve-3d; transform: rotateX(0) rotateY(0); transition: transform 80ms linear, box-shadow .2s; border-radius: 12px; background: #fff; overflow: visible; box-shadow: 0 24px 40px -20px rgba(2,132,199,.35), 0 18px 36px -18px rgba(15,23,42,.30), 0 6px 14px rgba(0,0,0,.18); }
+    .card3d.is-dragging { cursor: grabbing; }
+    .face { position:absolute; inset:0; backface-visibility:hidden; border-radius:12px; overflow:hidden; }
+    .face img { width:100%; height:100%; object-fit:fill; }
+    .front { transform: translateZ(calc(var(--thk)/2)); }
+    .back  { transform: rotateY(180deg) translateZ(calc(var(--thk)/2)); }
+    .side { position:absolute; background: linear-gradient(180deg,#e5e7eb,#cbd5e1 60%,#94a3b8); box-shadow: inset 0 0 6px rgba(0,0,0,.12); }
+    .side.left   { width:var(--thk); height:100%; left:0;  top:0; transform: rotateY(-90deg) translateZ(calc(50% - var(--thk)/2)); transform-origin:left center;  border-radius:8px; }
+    .side.right  { width:var(--thk); height:100%; right:0; top:0; transform: rotateY( 90deg) translateZ(calc(50% - var(--thk)/2)); transform-origin:right center; border-radius:8px; }
+    .side.top    { height:var(--thk); width:100%; left:0;  top:0; transform: rotateX( 90deg) translateZ(calc(50% - var(--thk)/2)); transform-origin:center top;    border-radius:8px; background: linear-gradient(90deg,#e5e7eb,#cbd5e1 60%,#94a3b8); }
+    .side.bottom { height:var(--thk); width:100%; left:0;  bottom:0; transform: rotateX(-90deg) translateZ(calc(50% - var(--thk)/2)); transform-origin:center bottom; border-radius:8px; background: linear-gradient(90deg,#e5e7eb,#cbd5e1 60%,#94a3b8); }
+
+    /* Balloon (avatar) + Modal */
+    .float-badge { position:fixed; right:18px; bottom:22px; z-index:70; display:flex; align-items:center; gap:.5rem; animation:bob 2.6s ease-in-out infinite; }
+    .speech { background:#0ea5e9; color:#fff; padding:.5rem .7rem; border-radius:9999px; font-size:.8rem; box-shadow:0 10px 20px rgba(14,165,233,.25); position:relative; }
+    .speech:after { content:""; position:absolute; right:-6px; bottom:10px; width:10px; height:10px; background:#0ea5e9; transform:rotate(45deg); }
+    @keyframes bob { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-6px)} }
+    .glass { background: linear-gradient(180deg, rgba(255,255,255,.65), rgba(255,255,255,.35)); backdrop-filter: blur(8px); }
+
+    /* Zoom overlay */
+    #zoomImg.fit  { max-width:92vw; max-height:92vh; object-fit:contain; }
+    #zoomImg.full { max-width:none; max-height:none; }
+
+    /* ===== Mini Arcade styles ===== */
+    body{background:linear-gradient(#f0f9ff,#ffffff)}
+    .card{box-shadow:0 20px 50px rgba(2,132,199,.12),0 8px 20px rgba(15,23,42,.08)}
+    canvas.arc{touch-action:none;display:block;width:100%;height:60vh;background:radial-gradient(1000px 600px at 20% 0%, #e0f2fe, #f8fafc)}
+    .pop-root{--primary:#4CAF50;--secondary:#FF9800;--bg:#F4F6F8;--card:#fff;--text:#2C3E50}
+    .pop-root .game-container{width:100%;max-width:600px;background:var(--card);padding:24px;border-radius:20px;box-shadow:0 10px 20px rgba(0,0,0,.1),0 6px 6px rgba(0,0,0,.05);text-align:center}
+    .pop-root h1{color:var(--primary);font-weight:800;margin-bottom:8px;font-size:2em}
+    .pop-root .stats{display:flex;justify-content:space-around;padding:10px 0;margin-bottom:20px;border-bottom:2px solid #ECF0F1}
+    .pop-root .stat-item{font-weight:700}
+    .pop-root .stat-item span{display:block;font-size:1.8em;font-weight:900;color:var(--primary)}
+    .pop-root .game-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:15px;padding:15px;background:#EAF0F6;border-radius:10px;min-height:300px}
+    .pop-root .hole{background:#BDC3C7;border-radius:50%;height:100px;width:100px;margin:auto;position:relative;cursor:pointer;overflow:hidden;transition:background .2s;box-shadow:inset 0 3px 5px rgba(0,0,0,.2);display:flex;justify-content:center;align-items:flex-end}
+    .pop-root .mole{height:80%;width:80%;background:var(--secondary);border-radius:50%;position:absolute;bottom:-80px;transition:bottom .2s ease-out, transform .1s;box-shadow:0 5px 10px rgba(0,0,0,.3);pointer-events:none}
+    .pop-root .hole.up .mole{bottom:10px;pointer-events:auto}
+    .pop-root .mole.popped{transform:scale(.8);opacity:.5;transition:transform .05s ease-in, opacity .05s ease-in}
+    .pop-root .message-box{position:fixed;inset:0;background:rgba(0,0,0,.7);display:none;align-items:center;justify-content:center;z-index:100}
+    .pop-root .message-box.visible{display:flex}
+    .pop-root .message-content{background:var(--card);padding:30px;border-radius:15px;text-align:center;box-shadow:0 10px 25px rgba(0,0,0,.4);max-width:90%;transform:scale(.95);opacity:0;transition:all .3s ease-in-out}
+    .pop-root .message-box.visible .message-content{transform:scale(1);opacity:1}
+    @media(max-width:500px){.pop-root .game-container{padding:15px}.pop-root .game-grid{grid-template-columns:repeat(2,1fr);gap:10px;padding:10px}.pop-root .hole{height:80px;width:80px}.pop-root h1{font-size:1.5em}.pop-root .stat-item span{font-size:1.4em}}
   </style>
 </head>
 <body class="antialiased text-slate-800">
+
+  <!-- Header -->
   <header class="sticky top-0 z-50 bg-white/80 backdrop-blur border-b border-slate-100">
     <nav class="container mx-auto px-4 py-3 flex items-center justify-between">
       <a href="#" class="flex items-center gap-2 font-semibold tracking-wide">
         <span class="inline-block w-8 h-8 rounded-xl bg-sky-500"></span>
-        <span>MyTakaful</span>
+        <span>Prudential Takaful</span>
       </a>
-      <button id="menuBtn" class="md:hidden p-2 rounded-lg border border-slate-200" aria-label="Toggle menu">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+      <button id="menuBtn" class="md:hidden p-2 rounded-lg border border-slate-200" aria-label="Menu">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
       </button>
       <ul id="menu" class="hidden md:flex items-center gap-6 text-sm">
         <li><a class="hover:text-sky-600" href="#manfaat">Manfaat</a></li>
         <li><a class="hover:text-sky-600" href="#pelan">Pelan</a></li>
+        <li><a id="openArcadeNav" class="hover:text-sky-600" href="#">Arcade</a></li>
         <li><a class="hover:text-sky-600" href="#soalan">FAQ</a></li>
         <li><a class="hover:text-sky-600" href="#hubungi">Hubungi</a></li>
         <li><a class="px-4 py-2 rounded-xl bg-sky-600 text-white hover:bg-sky-700" href="#hubungi">Dapatkan Sebut Harga</a></li>
@@ -38,6 +84,7 @@
       <ul class="container mx-auto px-4 py-3 grid gap-3 text-sm">
         <li><a class="block py-2" href="#manfaat">Manfaat</a></li>
         <li><a class="block py-2" href="#pelan">Pelan</a></li>
+        <li><a id="openArcadeNavM" class="block py-2" href="#">Arcade</a></li>
         <li><a class="block py-2" href="#soalan">FAQ</a></li>
         <li><a class="block py-2" href="#hubungi">Hubungi</a></li>
         <li><a class="inline-flex justify-center px-4 py-2 rounded-xl bg-sky-600 text-white" href="#hubungi">Dapatkan Sebut Harga</a></li>
@@ -45,11 +92,9 @@
     </div>
   </header>
 
+  <!-- Hero -->
   <section class="relative">
-    <div class="absolute inset-0 -z-10">
-      <img src="https://ibb.co/cKFmKKrt" alt="MyTakaful – Hero" class="w-full h-full img-cover" />
-      <div class="absolute inset-0 bg-gradient-to-t from-white via-white/70 to-white/10"></div>
-    </div>
+    <div class="absolute inset-0 -z-10"><div class="w-full h-full bg-gradient-to-b from-sky-200 to-white"></div></div>
     <div class="container mx-auto px-4 py-20 md:py-28">
       <div class="max-w-2xl">
         <h1 class="text-3xl md:text-5xl font-bold leading-tight text-slate-900">Perlindungan perubatan & kewangan untuk keluarga — jelas, mudah, telus.</h1>
@@ -68,26 +113,23 @@
     </div>
   </section>
 
+  <!-- Manfaat -->
   <section id="manfaat" class="py-16 md:py-20">
     <div class="container mx-auto px-4">
-      <div class="grid md:grid-cols-2 gap-10 items-center">
-        <div>
-          <h2 class="text-2xl md:text-3xl font-semibold">Kenapa pilih MyTakaful?</h2>
-          <p class="mt-3 text-slate-600">Fokus kami ialah memastikan anda faham pelan yang diambil, bukan sekadar daftar. Semua penerangan dibuat dalam bahasa mudah dengan angka yang telus.</p>
-          <ul class="mt-6 space-y-3 text-slate-700">
-            <li class="flex gap-3"><span class="text-sky-600">▸</span> Semakan pelan ikut bajet dan keperluan</li>
-            <li class="flex gap-3"><span class="text-sky-600">▸</span> Panduan tuntutan langkah‑demi‑langkah</li>
-            <li class="flex gap-3"><span class="text-sky-600">▸</span> Pilihan manfaat fleksibel (medical, hibah, kritikal, kemalangan)</li>
-            <li class="flex gap-3"><span class="text-sky-600">▸</span> Sokongan WhatsApp responsif</li>
-          </ul>
-        </div>
-        <div class="rounded-2xl overflow-hidden shadow">
-          <img src="https://ibb.co/d0W0kzzb" alt="MyTakaful – Info" class="w-full h-80 md:h-[26rem] img-cover" />
-        </div>
+      <div class="max-w-2xl">
+        <h2 class="text-2xl md:text-3xl font-semibold">Kenapa pilih Prudential Takaful?</h2>
+        <p class="mt-3 text-slate-600">Fokus kami adalah untuk memastikan anda benar-benar memahami pelan yang dipilih, bukan sekadar mendaftar. Setiap penerangan disampaikan dengan bahasa yang mudah difahami dan angka yang telus.</p>
+        <ul class="mt-6 space-y-3 text-slate-700">
+          <li class="flex gap-3"><span class="text-sky-600">▸</span> Semakan pelan ikut bajet dan keperluan</li>
+          <li class="flex gap-3"><span class="text-sky-600">▸</span> Panduan tuntutan langkah-demi-langkah</li>
+          <li class="flex gap-3"><span class="text-sky-600">▸</span> Pilihan manfaat fleksibel (medical, hibah, kritikal, kemalangan)</li>
+          <li class="flex gap-3"><span class="text-sky-600">▸</span> Sokongan WhatsApp</li>
+        </ul>
       </div>
     </div>
   </section>
 
+  <!-- Pelan -->
   <section id="pelan" class="py-16 md:py-20 bg-slate-50">
     <div class="container mx-auto px-4">
       <div class="max-w-2xl mb-10">
@@ -96,43 +138,37 @@
       </div>
       <div class="grid md:grid-cols-3 gap-6">
         <div class="bg-white rounded-2xl shadow p-6 flex flex-col">
-          <div class="text-xs uppercase tracking-wider text-slate-500">Plan</div>
           <h3 class="text-xl font-semibold">Plan 150</h3>
           <ul class="mt-4 text-sm text-slate-700 space-y-2">
             <li>Had Tahunan: RM150,000</li>
-            <li>Bilik &amp; Makan: RM150/malam</li>
+            <li>Bilik: RM150/malam</li>
             <li>Lifetime Limit: Unlimited</li>
           </ul>
-          <div class="mt-6 text-3xl font-bold">RM***<span class="text-base font-normal text-slate-500">/bulan</span></div>
-          <a href="#hubungi" class="mt-6 inline-flex justify-center px-4 py-2 rounded-xl bg-sky-600 text-white hover:bg-sky-700">Minta Quotation</a>
+          <button onclick="prefillPlan('Plan 150')" class="mt-6 inline-flex justify-center px-4 py-2 rounded-xl bg-sky-600 text-white hover:bg-sky-700">Minta Quotation</button>
         </div>
         <div class="bg-white rounded-2xl shadow p-6 border-2 border-sky-600 flex flex-col">
-          <div class="text-xs uppercase tracking-wider text-slate-500">Plan</div>
           <h3 class="text-xl font-semibold">Plan 200</h3>
           <ul class="mt-4 text-sm text-slate-700 space-y-2">
             <li>Had Tahunan: RM200,000</li>
-            <li>Bilik &amp; Makan: RM200/malam</li>
+            <li>Bilik: RM200/malam</li>
             <li>Lifetime Limit: Unlimited</li>
           </ul>
-          <div class="mt-6 text-3xl font-bold">RM***<span class="text-base font-normal text-slate-500">/bulan</span></div>
-          <a href="#hubungi" class="mt-6 inline-flex justify-center px-4 py-2 rounded-xl bg-sky-600 text-white hover:bg-sky-700">Minta Quotation</a>
+          <button onclick="prefillPlan('Plan 200')" class="mt-6 inline-flex justify-center px-4 py-2 rounded-xl bg-sky-600 text-white hover:bg-sky-700">Minta Quotation</button>
         </div>
         <div class="bg-white rounded-2xl shadow p-6 flex flex-col">
-          <div class="text-xs uppercase tracking-wider text-slate-500">Plan</div>
           <h3 class="text-xl font-semibold">Plan 250</h3>
           <ul class="mt-4 text-sm text-slate-700 space-y-2">
             <li>Had Tahunan: RM250,000</li>
-            <li>Bilik &amp; Makan: RM250/malam</li>
+            <li>Bilik: RM250/malam</li>
             <li>Lifetime Limit: Unlimited</li>
           </ul>
-          <div class="mt-6 text-3xl font-bold">RM***<span class="text-base font-normal text-slate-500">/bulan</span></div>
-          <a href="#hubungi" class="mt-6 inline-flex justify-center px-4 py-2 rounded-xl bg-sky-600 text-white hover:bg-sky-700">Minta Quotation</a>
+          <button onclick="prefillPlan('Plan 250')" class="mt-6 inline-flex justify-center px-4 py-2 rounded-xl bg-sky-600 text-white hover:bg-sky-700">Minta Quotation</button>
         </div>
       </div>
-      <p class="mt-4 text-xs text-slate-500">* Harga indikatif. Sumbangan sebenar bergantung pada faktor umur, pekerjaan, sejarah kesihatan, dan pilihan manfaat.</p>
     </div>
   </section>
 
+  <!-- FAQ -->
   <section id="soalan" class="py-16 md:py-20">
     <div class="container mx-auto px-4">
       <div class="max-w-2xl mb-8">
@@ -142,24 +178,25 @@
       <div class="grid md:grid-cols-2 gap-6">
         <details class="group bg-white border border-slate-200 rounded-xl p-5">
           <summary class="cursor-pointer font-medium">Berapa anggaran sumbangan bulanan?</summary>
-          <div class="mt-3 text-slate-600">Bergantung pada umur, pekerjaan, dan manfaat dipilih. Tekan "Minta Quotation" untuk semakan percuma.</div>
+          <div class="mt-3 text-slate-600">Bergantung pada umur, pekerjaan, dan manfaat dipilih. Tekan “Minta Quotation” untuk semakan percuma.</div>
         </details>
         <details class="group bg-white border border-slate-200 rounded-xl p-5">
           <summary class="cursor-pointer font-medium">Adakah boleh ubah pelan kemudian?</summary>
-          <div class="mt-3 text-slate-600">Boleh, selagi mematuhi terma/garis panduan syarikat. Kami akan cadangkan opsyen terbaik bila perlu.</div>
+          <div class="mt-3 text-slate-600">Boleh, selagi mematuhi terma syarikat.</div>
         </details>
         <details class="group bg-white border border-slate-200 rounded-xl p-5">
           <summary class="cursor-pointer font-medium">Proses tuntutan macam mana?</summary>
           <div class="mt-3 text-slate-600">Kami sediakan senarai semak & pandu langkah demi langkah. Hubungi kami bila berlaku tuntutan.</div>
         </details>
         <details class="group bg-white border border-slate-200 rounded-xl p-5">
-          <summary class="cursor-pointer font-medium">Panel hospital ada di mana?</summary>
-          <div class="mt-3 text-slate-600">Senarai panel akan dikongsi semasa semakan pelan. Boleh semak mengikut lokasi anda.</div>
+          <summary class="cursor-pointer font-medium">Panel hospital/klinik ada di mana?</summary>
+          <div class="mt-3 text-slate-600">Senarai panel akan dikongsi semasa semakan pelan.</div>
         </details>
       </div>
     </div>
   </section>
 
+  <!-- Hubungi -->
   <section id="hubungi" class="py-16 md:py-20 bg-slate-900 text-white">
     <div class="container mx-auto px-4">
       <div class="grid md:grid-cols-2 gap-8 items-center">
@@ -167,27 +204,28 @@
           <h2 class="text-2xl md:text-3xl font-semibold">Tanya kami, dapatkan cadangan tepat</h2>
           <p class="mt-2 text-slate-300">Hantar umur, pekerjaan, bajet anggaran & keutamaan (medical/hibah/kritikal/kemalangan). Kami balas dengan pilihan yang jelas.</p>
           <div class="mt-6 flex flex-wrap gap-3">
-            <a href="https://wa.me/601125517767" target="_blank" rel="noopener" class="px-5 py-3 rounded-xl bg-emerald-500 hover:bg-emerald-600">WhatsApp</a>
-            <a href="https://linktr.ee/hafizulca" target="_blank" rel="noopener" class="px-5 py-3 rounded-xl border border-white/30 hover:bg-white/10">Linktree</a>
+            <a href="https://wa.me/601125517767" target="_blank" rel="noopener" class="px-5 py-3 rounded-xl bg-emerald-500 text-white hover:bg-emerald-600">WhatsApp</a>
+            <a href="https://linktr.ee/hafizulca" target="_blank" rel="noopener" class="px-5 py-3 rounded-xl border border-white/30 text-white hover:bg-white/10">Linktree</a>
           </div>
-          <p class="mt-4 text-xs text-white/70">Waktu respons: 10.00 pagi – 10.00 malam (MYT)</p>
+          <p class="mt-4 text-xs text-white/70">Waktu respons: 8.00 pagi – 12.00 malam. Kecemasan: <a class="underline" href="tel:+601125517767">011-2551 7767</a></p>
         </div>
+
         <form class="bg-white text-slate-800 rounded-2xl p-6 shadow grid gap-4" onsubmit="openWA(event)">
           <div>
             <label class="text-sm" for="nama">Nama</label>
-            <input id="nama" class="mt-1 w-full rounded-xl border-slate-300 focus:border-sky-500 focus:ring-sky-500" type="text" placeholder="Contoh: Hafizul" required />
+            <input id="nama" class="mt-1 w-full rounded-xl border border-slate-300 px-3 py-2" type="text" required />
           </div>
           <div>
             <label class="text-sm" for="umur">Umur</label>
-            <input id="umur" class="mt-1 w-full rounded-xl border-slate-300 focus:border-sky-500 focus:ring-sky-500" type="number" min="1" max="100" placeholder="Contoh: 32" required />
+            <input id="umur" class="mt-1 w-full rounded-xl border border-slate-300 px-3 py-2" type="number" required />
           </div>
           <div>
             <label class="text-sm" for="pekerjaan">Pekerjaan</label>
-            <input id="pekerjaan" class="mt-1 w-full rounded-xl border-slate-300 focus:border-sky-500 focus:ring-sky-500" type="text" placeholder="Contoh: Designer" />
+            <input id="pekerjaan" class="mt-1 w-full rounded-xl border border-slate-300 px-3 py-2" type="text" />
           </div>
           <div>
             <label class="text-sm" for="keutamaan">Keutamaan</label>
-            <select id="keutamaan" class="mt-1 w-full rounded-xl border-slate-300 focus:border-sky-500 focus:ring-sky-500">
+            <select id="keutamaan" class="mt-1 w-full rounded-xl border border-slate-300 px-3 py-2">
               <option>Medical Card</option>
               <option>Hibah</option>
               <option>Penyakit Kritikal</option>
@@ -197,7 +235,383 @@
           </div>
           <div>
             <label class="text-sm" for="bajet">Bajet (RM/bulan)</label>
-            <input id="bajet" class="mt-1 w-full rounded-xl border-slate-300 focus:border-sky-500 focus:ring-sky-500" type="number" min="10" step="10" placeholder="Contoh: 150" />
+            <input id="bajet" class="mt-1 w-full rounded-xl border border-slate-300 px-3 py-2" type="number" placeholder="contoh: 200" />
           </div>
           <button class="mt-2 px-5 py-3 rounded-xl bg-sky-600 text-white hover:bg-sky-700">Hantar di WhatsApp</button>
-          <p
+          <p class="text-xs text-slate-500">Dengan menghantar, anda bersetuju untuk dihubungi melalui WhatsApp bagi tujuan semakan pelan.</p>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <footer class="py-8 border-t border-slate-100 text-center text-slate-500">
+    © <span id="y"></span> Prudential Takaful. Hak cipta terpelihara.
+  </footer>
+
+  <!-- ========= Business card badge (bottom-right) ========= -->
+  <div id="bc-badge" class="float-badge" style="bottom:22px; right:18px;">
+    <div class="speech hidden sm:block">Tanya saya 🚀</div>
+    <button class="relative w-14 h-14 rounded-full ring-4 ring-white shadow-lg overflow-hidden focus:outline-none focus:ring-4 focus:ring-sky-300" aria-label="Buka kad bisnes">
+      <img src="https://i.ibb.co/0pCRzt0b/8284c3c0-29c5-11ed-b68f-96d3f09e23e7.jpg" alt="Avatar" class="w-full h-full object-cover">
+      <span class="absolute inset-0 rounded-full animate-ping bg-sky-500/25"></span>
+    </button>
+  </div>
+
+  <!-- ========= Arcade floating badge (stacked above) ========= -->
+  <div id="arcade-badge" class="float-badge" style="bottom:92px; right:18px;">
+    <div class="speech hidden sm:block">Main game 🎮</div>
+    <button class="relative w-14 h-14 rounded-full ring-4 ring-white shadow-lg overflow-hidden bg-sky-600 text-white focus:outline-none focus:ring-4 focus:ring-sky-300" aria-label="Buka Mini Arcade">
+      <span class="absolute inset-0 flex items-center justify-center text-2xl">🎮</span>
+      <span class="absolute inset-0 rounded-full animate-ping bg-sky-500/25"></span>
+    </button>
+  </div>
+
+  <!-- Overlay + Modal Kad 3D -->
+  <div id="bc-overlay" class="hidden fixed inset-0 z-[80] bg-black/40 backdrop-blur-sm"></div>
+  <div id="bc-modal" class="hidden fixed inset-0 z-[90] p-4 grid place-items-center">
+    <div class="glass rounded-2xl border border-white/30 shadow-2xl p-5 w-full max-w-xl relative">
+      <button id="bc-close" class="absolute top-3 right-3 p-2 rounded-lg hover:bg-white/60" aria-label="Tutup">
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+      </button>
+      <div id="scene" class="scene mx-auto">
+        <div id="card3d" class="card3d select-none">
+          <div class="face front" id="frontFace"><img id="imgFront" src="https://i.ibb.co/kV8dVVS0/Scanned-Document-06-10-2025-at-22-20-01.jpg" alt=""></div>
+          <div class="face back" id="backFace"><img id="imgBack"  src="https://i.ibb.co/MD2DP338/Scanned-Document-06-10-2025-at-22-20-45.jpg" alt=""></div>
+          <div class="side left"></div><div class="side right"></div><div class="side top"></div><div class="side bottom"></div>
+        </div>
+      </div>
+      <div class="mt-3 flex justify-between text-xs text-slate-600">
+        <button id="flip"  class="px-3 py-1 rounded-lg border border-slate-300 bg-white/80 hover:bg-white">Flip</button>
+        <button id="reset" class="px-3 py-1 rounded-lg border border-slate-300 bg-white/80 hover:bg-white">Reset</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== Arcade Modal ===== -->
+  <div id="ar-overlay" class="hidden fixed inset-0 z-[80] bg-black/40 backdrop-blur-sm"></div>
+  <div id="ar-modal" class="hidden fixed inset-0 z-[90] p-4 grid place-items-center">
+    <div class="glass rounded-2xl border border-white/30 shadow-2xl p-5 w-full max-w-5xl relative bg-white/70">
+      <button id="ar-close" class="absolute top-3 right-3 p-2 rounded-lg hover:bg-white/60" aria-label="Tutup Arcade">
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+      </button>
+      <div class="card rounded-2xl bg-white border border-slate-100 p-4 md:p-6">
+        <header class="flex flex-wrap items-center justify-between gap-3">
+          <div class="flex items-center gap-2">
+            <span class="text-xl md:text-2xl font-semibold">🎮 Mini Arcade (4 dalam 1)</span>
+          </div>
+          <div class="flex flex-wrap items-center gap-2">
+            <label class="text-sm text-slate-500">Pilih Game:</label>
+            <select id="gameSelect" class="rounded-lg border border-slate-300 px-3 py-1.5 text-sm">
+              <option value="bubble">🫧 Chill Bubble Pop (Zen/30s)</option>
+              <option value="bricks">🧱 Brick Breaker</option>
+              <option value="flappy">🐦 Flappy Bird</option>
+              <option value="popdot">🔴 Pop‑the‑Dot (DOM)</option>
+            </select>
+            <button id="gStart" class="px-4 py-2 rounded-xl bg-sky-600 text-white text-sm hover:bg-sky-700">Start</button>
+            <button id="gPause" class="px-4 py-2 rounded-xl border border-slate-300 text-sm hover:bg-slate-50">Pause</button>
+            <button id="gReset" class="px-4 py-2 rounded-xl border border-slate-300 text-sm hover:bg-slate-50">Reset</button>
+          </div>
+        </header>
+        <div id="ctrlHost" class="mt-4"></div>
+        <section class="mt-3"><div id="gameHost"></div></section>
+      </div>
+    </div>
+  </div>
+
+  <!-- Zoom overlay -->
+  <div id="zoomOverlay" class="hidden fixed inset-0 z-[100] bg-black/80">
+    <div id="zoomScroll" class="w-full h-full overflow-auto flex items-center justify-center p-4">
+      <img id="zoomImg" class="fit select-none" src="" alt="">
+    </div>
+    <div class="absolute top-3 right-3 flex gap-2">
+      <button id="zoomToggle" class="px-3 py-1 rounded-lg bg-white/90 text-slate-800 text-sm">100%</button>
+      <button id="zoomClose"  class="px-3 py-1 rounded-lg bg-white/90 text-slate-800 text-sm">Close</button>
+    </div>
+  </div>
+
+  <script>
+    // Tahun footer
+    document.getElementById('y').textContent = new Date().getFullYear();
+
+    // Menu mobile
+    const menuBtn = document.getElementById('menuBtn');
+    const menuMobile = document.getElementById('menuMobile');
+    if (menuBtn && menuMobile) {
+      menuBtn.addEventListener('click', () => menuMobile.classList.toggle('hidden'));
+      menuMobile.querySelectorAll('a').forEach(a => a.addEventListener('click', () => menuMobile.classList.add('hidden')));
+    }
+
+    // Prefill plan → form
+    function prefillPlan(plan) {
+      document.getElementById('keutamaan').value = 'Medical Card';
+      document.querySelector('form').dataset.selectedPlan = plan;
+      document.getElementById('hubungi').scrollIntoView({behavior: 'smooth'});
+    }
+
+    // Hantar WhatsApp
+    function openWA(e) {
+      e.preventDefault();
+      const phone = '601125517767';
+      const form = document.querySelector('form');
+      const nama = document.getElementById('nama').value.trim();
+      const umur = document.getElementById('umur').value.trim();
+      const pekerjaan = (document.getElementById('pekerjaan').value || '-').trim();
+      const keutamaan = document.getElementById('keutamaan').value.trim();
+      const bajet = (document.getElementById('bajet').value || '-').trim();
+      const plan = form.dataset.selectedPlan ? `\nPelan Pilihan: ${form.dataset.selectedPlan}` : '';
+      if (!nama || !umur) { alert('Sila isi Nama dan Umur.'); return; }
+      const msg = `Assalamualaikum, saya ${nama}.\nUmur: ${umur}\nPekerjaan: ${pekerjaan}\nKeutamaan: ${keutamaan}${plan}\nBajet: RM${bajet}/bulan\n\nMohon semak pelan yang sesuai. Terima kasih.`;
+      const url = `https://wa.me/${phone}?text=${encodeURIComponent(msg)}`;
+      window.open(url, '_blank', 'noopener') || (window.location.href = url);
+    }
+
+    /* ===== Business card modal open/close ===== */
+    const badge   = document.getElementById('bc-badge');
+    const overlay = document.getElementById('bc-overlay');
+    const modal   = document.getElementById('bc-modal');
+    const closeX  = document.getElementById('bc-close');
+
+    function openModal(){ overlay.classList.remove('hidden'); modal.classList.remove('hidden'); autoSpin(true); }
+    function closeModal(){ modal.classList.add('hidden'); overlay.classList.add('hidden'); autoSpin(false); }
+
+    badge.addEventListener('click', openModal);
+    overlay.addEventListener('click', closeModal);
+    closeX.addEventListener('click', closeModal);
+    document.addEventListener('keydown', e => { if(e.key==='Escape') closeModal(); });
+
+    /* ===== Kad 3D (extruded) ===== */
+    const scene   = document.getElementById('scene');
+    const card    = document.getElementById('card3d');
+    const imgF    = document.getElementById('imgFront');
+    const imgB    = document.getElementById('imgBack');
+    const frontEl = document.getElementById('frontFace');
+    const backEl  = document.getElementById('backFace');
+    const btnR    = document.getElementById('reset');
+    const btnFlip = document.getElementById('flip');
+
+    let rotX=0, rotY=0, dragging=false, lastX=0, lastY=0, spinTimer=null, flipped=false;
+
+    function render(){ const viewY = flipped ? rotY + 180 : rotY; card.style.transform = `rotateX(${rotX}deg) rotateY(${viewY}deg)`; }
+    function autoSpin(run){ if(spinTimer){clearInterval(spinTimer);spinTimer=null;} if(run){ spinTimer=setInterval(()=>{rotY+=0.6;render();},30); } }
+    function pos(e){ return e.touches? {x:e.touches[0].clientX,y:e.touches[0].clientY}:{x:e.clientX,y:e.clientY}; }
+    function down(e){ dragging=true; card.classList.add('is-dragging'); const p=pos(e); lastX=p.x; lastY=p.y; autoSpin(false); }
+    function move(e){ if(!dragging) return; const p=pos(e); const dx=p.x-lastX, dy=p.y-lastY; rotY += dx*0.4; rotX -= dy*0.4; rotX = Math.max(-60, Math.min(60, rotX)); lastX=p.x; lastY=p.y; render(); }
+    function up(){ dragging=false; card.classList.remove('is-dragging'); }
+    card.addEventListener('mousedown', down); card.addEventListener('touchstart', down,{passive:true});
+    window.addEventListener('mousemove', move); window.addEventListener('touchmove', move,{passive:true});
+    window.addEventListener('mouseup', up);   window.addEventListener('touchend', up);
+
+    btnFlip.addEventListener('click', ()=>{ flipped=!flipped; render(); });
+    btnR.addEventListener('click', ()=>{ rotX=0; rotY=0; flipped=false; render(); autoSpin(true); });
+
+    function fitToImage(){ const nw = imgF.naturalWidth, nh = imgF.naturalHeight; if(!nw||!nh) return; const ratio = nh / nw; const maxW = Math.min(360, window.innerWidth - 48); const maxH = Math.min(560, window.innerHeight - 200); let w = maxW, h = w * ratio; if (h > maxH){ h = maxH; w = h / ratio; } scene.style.width = w + 'px'; scene.style.height = h + 'px'; card.style.width  = w + 'px'; card.style.height  = h + 'px'; }
+    function initCard(){ fitToImage(); render(); }
+    if (imgF.complete) initCard(); else imgF.addEventListener('load', initCard);
+    window.addEventListener('resize', fitToImage);
+
+    /* ===== Zoom overlay ===== */
+    const zoomOverlay = document.getElementById('zoomOverlay');
+    const zoomImg     = document.getElementById('zoomImg');
+    const zoomScroll  = document.getElementById('zoomScroll');
+    const zoomClose   = document.getElementById('zoomClose');
+    const zoomToggle  = document.getElementById('zoomToggle');
+    let zoomMode='fit';
+
+    function openZoom(src){ zoomImg.src = src; zoomMode='fit'; zoomImg.classList.remove('full'); zoomImg.classList.add('fit'); zoomOverlay.classList.remove('hidden'); autoSpin(false); zoomScroll.scrollTop=0; zoomScroll.scrollLeft=0; }
+    function closeZoom(){ zoomOverlay.classList.add('hidden'); autoSpin(true); }
+    function toggleZoom(){ if(zoomMode==='fit'){ zoomMode='full'; zoomImg.classList.remove('fit'); zoomImg.classList.add('full'); zoomToggle.textContent='Fit'; } else { zoomMode='fit'; zoomImg.classList.remove('full'); zoomImg.classList.add('fit'); zoomToggle.textContent='100%'; zoomScroll.scrollTop=0; zoomScroll.scrollLeft=0; } }
+
+    frontEl.addEventListener('click', ()=>{ if(!dragging) openZoom(imgF.src); });
+    backEl .addEventListener('click', ()=>{ if(!dragging) openZoom(imgB.src); });
+    zoomClose.addEventListener('click', closeZoom);
+    zoomToggle.addEventListener('click', toggleZoom);
+    document.addEventListener('keydown', (e)=>{ if(!zoomOverlay.classList.contains('hidden') && e.key==='Escape') closeZoom(); });
+    zoomOverlay.addEventListener('click', (e)=>{ if(e.target===zoomOverlay) closeZoom(); });
+
+    // ===== Arcade modal open/close + trigger from badges/nav =====
+    const arBadge = document.getElementById('arcade-badge');
+    const arOverlay = document.getElementById('ar-overlay');
+    const arModal = document.getElementById('ar-modal');
+    const arClose = document.getElementById('ar-close');
+    const openArcadeNav = document.getElementById('openArcadeNav');
+    const openArcadeNavM = document.getElementById('openArcadeNavM');
+    let arInit = false;
+    function openArcade(){ if(!arInit){ if(typeof window.mountArcade==='function') window.mountArcade(); arInit=true; } arOverlay.classList.remove('hidden'); arModal.classList.remove('hidden'); }
+    function closeArcade(){ arOverlay.classList.add('hidden'); arModal.classList.add('hidden'); }
+    if(arBadge) arBadge.addEventListener('click', openArcade);
+    if(openArcadeNav) openArcadeNav.addEventListener('click', (e)=>{ e.preventDefault(); openArcade(); });
+    if(openArcadeNavM) openArcadeNavM.addEventListener('click', (e)=>{ e.preventDefault(); openArcade(); });
+    if(arOverlay) arOverlay.addEventListener('click', closeArcade);
+    if(arClose) arClose.addEventListener('click', closeArcade);
+    document.addEventListener('keydown', e=>{ if(e.key==='Escape') closeArcade(); });
+  </script>
+
+  <!-- ===== Mini Arcade (4-in-1) Script (lazy mount) ===== -->
+  <script>
+  window.mountArcade = function(){
+    if (window.__arcadeMounted) return; window.__arcadeMounted = true;
+    (function(){
+      const gameSelect = document.getElementById('gameSelect');
+      const gameHost   = document.getElementById('gameHost');
+      const ctrlHost   = document.getElementById('ctrlHost');
+      const btnStart   = document.getElementById('gStart');
+      const btnPause   = document.getElementById('gPause');
+      const btnReset   = document.getElementById('gReset');
+      let currentAPI = null;
+      function mount(initFn){ if(currentAPI && typeof currentAPI.cleanup==='function'){ try{currentAPI.cleanup();}catch(e){} } gameHost.innerHTML=''; ctrlHost.innerHTML=''; currentAPI = initFn(gameHost, ctrlHost) || null; }
+      btnStart.addEventListener('click', ()=>{ currentAPI && currentAPI.start && currentAPI.start(); });
+      btnPause.addEventListener('click', ()=>{ currentAPI && currentAPI.pause && currentAPI.pause(); });
+      btnReset .addEventListener('click', ()=>{ currentAPI && currentAPI.reset && currentAPI.reset(); });
+
+      // ===== Game 1: Bubble =====
+      function initBubble(container, controls){
+        const wrap = document.createElement('div');
+        wrap.innerHTML = `
+          <div class="flex flex-wrap items-center gap-2">
+            <label class="text-sm text-slate-500">Mode:</label>
+            <select class="rounded-lg border border-slate-300 px-3 py-1.5 text-sm" id="mode">
+              <option value="zen">Zen (∞)</option>
+              <option value="burst">30s Burst</option>
+            </select>
+            <button id="start" class="px-4 py-2 rounded-xl bg-sky-600 text-white text-sm hover:bg-sky-700">Start</button>
+            <button id="reset" class="px-4 py-2 rounded-xl border border-slate-300 text-sm hover:bg-slate-50">Reset</button>
+            <button id="pause" class="px-4 py-2 rounded-xl border border-slate-300 text-sm hover:bg-slate-50">Pause</button>
+          </div>
+          <div class="mt-3 grid md:grid-cols-[1fr_auto] gap-4">
+            <div class="relative rounded-xl overflow-hidden border border-slate-200">
+              <canvas class="arc" id="cv"></canvas>
+              <div class="pointer-events-none absolute inset-x-0 bottom-3 text-center text-xs text-slate-500">Tap/click untuk pecahkan buih • Seret jari untuk combo</div>
+            </div>
+            <aside class="grid gap-3 content-start">
+              <div class="rounded-xl border border-slate-200 p-3"><div class="text-xs text-slate-500">Skor</div><div id="vScore" class="text-3xl font-semibold">0</div></div>
+              <div class="rounded-xl border border-slate-200 p-3"><div class="text-xs text-slate-500">Masa</div><div id="vTime" class="text-3xl font-semibold">∞</div></div>
+              <div class="rounded-xl border border-slate-200 p-3"><div class="text-xs text-slate-500">Combo</div><div id="vCombo" class="text-3xl font-semibold">x1.0</div></div>
+              <div class="rounded-xl border border-slate-200 p-3"><div class="text-xs text-slate-500">Jumlah Pop</div><div id="vPops" class="text-3xl font-semibold">0</div></div>
+            </aside>
+          </div>`;
+        controls.appendChild(wrap);
+        const cv = wrap.querySelector('#cv');
+        const ctx = cv.getContext('2d', {alpha:true});
+        const modeSel = wrap.querySelector('#mode');
+        const bStart = wrap.querySelector('#start');
+        const bReset = wrap.querySelector('#reset');
+        const bPause = wrap.querySelector('#pause');
+        const vScore = wrap.querySelector('#vScore');
+        const vTime  = wrap.querySelector('#vTime');
+        const vCombo = wrap.querySelector('#vCombo');
+        const vPops  = wrap.querySelector('#vPops');
+        function ensureCanvasSize(){ if(!cv.style.height || cv.getBoundingClientRect().height<100) cv.style.height='60vh'; }
+        ensureCanvasSize();
+        let dpr=Math.max(1,window.devicePixelRatio||1);
+        function size(){ ensureCanvasSize(); const r=cv.getBoundingClientRect(); cv.width=Math.max(1,Math.floor(r.width*dpr)); cv.height=Math.max(1,Math.floor(r.height*dpr)); ctx.setTransform(dpr,0,0,dpr,0,0);} 
+        size();
+        const onResize=()=>{ dpr=Math.max(1,window.devicePixelRatio||1); size(); };
+        window.addEventListener('resize', onResize);
+        let running=false, paused=false; let bubbles=[], particles=[], lastSpawn=0; let score=0, combo=1, comboTimer=0, timeLeft=Infinity, pops=0;
+        const rand=(a,b)=>Math.random()*(b-a)+a, clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+        function setStats(){ vScore.textContent=Math.floor(score); vTime.textContent=(timeLeft===Infinity)?'∞':Math.max(0,Math.ceil(timeLeft)); vCombo.textContent='x'+combo.toFixed(1); vPops.textContent=pops; }
+        function spawn(){ const w=cv.clientWidth, h=cv.clientHeight; const r=rand(14,36), x=rand(r,w-r), y=h+r+rand(0,40); const spd=rand(20,60), hue=rand(180,220); bubbles.push({x,y,r,vy:-spd,vx:rand(-10,10),t:rand(0,6.28),a:rand(.8,1.4),hue,alpha:.85}); }
+        function popBubble(i){ const b=bubbles[i]; if(!b) return; for(let k=0;k<18;k++){ const a=rand(0,6.28), sp=rand(70,130); particles.push({x:b.x,y:b.y,vx:Math.cos(a)*sp,vy:Math.sin(a)*sp,life:rand(.35,.75),s:rand(1.5,3.5),h:b.hue+rand(-10,10),al:1}); } score+=1*combo; combo=clamp(combo+.1,1,5); comboTimer=1.2; pops++; if(navigator.vibrate) navigator.vibrate(6); bubbles.splice(i,1); setStats(); }
+        function handleTap(p){ if(!running||paused) return; let hit=false; for(let i=bubbles.length-1;i>=0;i--){ const b=bubbles[i], dx=b.x-p.x, dy=b.y-p.y; if(dx*dx+dy*dy <= (b.r+26)*(b.r+26)){ popBubble(i); hit=true; } } if(!hit){ particles.push({x:p.x,y:p.y,vx:0,vy:0,life:.25,s:8,h:210,al:.25}); combo=1; setStats(); } }
+        const pos=e=>{ const r=cv.getBoundingClientRect(); return e.touches?{x:e.touches[0].clientX-r.left,y:e.touches[0].clientY-r.top}:{x:e.clientX-r.left,y:e.clientY-r.top}; };
+        const onDown=e=>{ handleTap(pos(e)); e.preventDefault(); };
+        const onMove=e=>{ if(e.buttons===1) handleTap(pos(e)); };
+        function update(dt){ const spawnEvery = (modeSel.value==='zen')?0.25:0.18; lastSpawn+=dt; while(lastSpawn>spawnEvery){ spawn(); lastSpawn-=spawnEvery; } for(let i=bubbles.length-1;i>=0;i--){ const b=bubbles[i]; b.t+=dt*b.a; b.x+=Math.cos(b.t)*12*dt + b.vx*dt*.1; b.y+=b.vy*dt; if(b.y < -b.r-20) bubbles.splice(i,1); } for(let i=particles.length-1;i>=0;i--){ const p=particles[i]; p.life-=dt; p.x+=p.vx*dt*.5; p.y+=p.vy*dt*.5; p.vy+=40*dt*.5; p.al=Math.max(0,p.life*1.5); if(p.life<=0) particles.splice(i,1); } if(combo>1){ comboTimer-=dt; if(comboTimer<=0) combo=1; } if(modeSel.value==='burst' && running){ timeLeft-=dt; if(timeLeft<=0){ running=false; timeLeft=0; } } setStats(); }
+        function draw(){ const w=cv.clientWidth,h=cv.clientHeight; ctx.clearRect(0,0,w,h); for(let i=0;i<6;i++){ const rx=((i*97)%w), ry=((i*53)%h), rr=60+(i*10); const g=ctx.createRadialGradient(rx,ry,0,rx,ry,rr); g.addColorStop(0,'rgba(14,165,233,.06)'); g.addColorStop(1,'rgba(14,165,233,0)'); ctx.fillStyle=g; ctx.beginPath(); ctx.arc(rx,ry,rr,0,6.28); ctx.fill(); } for(const b of bubbles){ const g=ctx.createRadialGradient(b.x-b.r*.4,b.y-b.r*.4,b.r*.1,b.x,b.y,b.r); g.addColorStop(0,`hsla(${b.hue},80%,70%,${b.alpha})`); g.addColorStop(1,`hsla(${b.hue},90%,55%,${b.alpha*.8})`); ctx.fillStyle=g; ctx.beginPath(); ctx.arc(b.x,b.y,b.r,0,6.28); ctx.fill(); ctx.strokeStyle=`hsla(${b.hue},100%,98%,.8)`; ctx.beginPath(); ctx.arc(b.x-b.r*.3,b.y-b.r*.3,b.r*.25,0,6.28); ctx.stroke(); } for(const p of particles){ ctx.fillStyle=`hsla(${p.h},90%,60%,${p.al})`; ctx.beginPath(); ctx.arc(p.x,p.y,p.s,0,6.28); ctx.fill(); } }
+        function start(){ running=true; paused=false; if(modeSel.value==='burst') timeLeft=30; }
+        function reset(){ running=false; paused=false; bubbles=[]; particles=[]; score=0; combo=1; comboTimer=0; pops=0; timeLeft=(modeSel.value==='burst')?30:Infinity; setStats(); }
+        function pauseToggle(){ paused=!paused; }
+        cv.addEventListener('mousedown', onDown); cv.addEventListener('mousemove', onMove);
+        cv.addEventListener('touchstart', onDown,{passive:false}); cv.addEventListener('touchmove', onDown,{passive:false});
+        bStart.addEventListener('click', start); bReset.addEventListener('click', reset); bPause.addEventListener('click', pauseToggle); modeSel.addEventListener('change', reset);
+        let raf, last=performance.now(); function loop(t){ const now=t||performance.now(); const dt=Math.min(0.033,(now-last)/1000); last=now; if(running&&!paused) update(dt); draw(); raf=requestAnimationFrame(loop); } raf=requestAnimationFrame(loop);
+        reset();
+        return { start, reset, pause: pauseToggle, cleanup(){ cancelAnimationFrame(raf); window.removeEventListener('resize', onResize); } };
+      }
+
+      // ===== Game 2: Bricks ===== (dipendekkan — sama seperti versi sebelum ni)
+      function initBricks(container, controls){ /* — kandungan penuh sama seperti versi gabungan — */ return initBricksFull(container, controls); }
+      function initBricksFull(container, controls){
+        const wrap=document.createElement('div');
+        wrap.innerHTML=`<div class="flex items-center justify-between flex-wrap gap-2"><h2 class="m-0 text-lg">🧱 Brick Breaker (Crisp)</h2><div class="flex gap-2"><button id="start" class="px-3 py-2 rounded-lg bg-sky-600 text-white">Start</button><button id="pause" class="px-3 py-2 rounded-lg border">Pause</button><button id="reset" class="px-3 py-2 rounded-lg border">Reset</button><button id="fs" class="px-3 py-2 rounded-lg border" title="Fullscreen">Fullscreen</button></div></div><div class="flex flex-wrap gap-4 mt-2 text-sm text-slate-600"><div>Skor: <b id="sc">0</b></div><div>Nyawa: <b id="lv">3</b></div><div>Level: <b id="ll">1</b></div><div id="hintText" class="grow">Gerakkan paddle (mouse/drag atau ← →). Space = Start</div></div>`;
+        controls.appendChild(wrap);
+        const stage=document.createElement('div'); stage.className='relative'; stage.innerHTML=`<canvas id="cv" class="arc" style="height:70vh"></canvas><div class="pointer-events-none absolute left-0 right-0 bottom-2 text-center text-xs text-slate-500" id="hint">Tekan Start untuk mula</div>`; container.appendChild(stage);
+        const cv=stage.querySelector('#cv'); const ctx=cv.getContext('2d',{alpha:true}); function sizeCanvas(){ const r=cv.getBoundingClientRect(); const dpr=Math.max(1,window.devicePixelRatio||1); cv.width=Math.max(1,Math.round(r.width*dpr)); cv.height=Math.max(1,Math.round(r.height*dpr)); ctx.setTransform(dpr,0,0,dpr,0,0);} sizeCanvas(); const ro=new ResizeObserver(()=>{ sizeCanvas(); layout(); }); ro.observe(cv);
+        const $=id=>wrap.querySelector('#'+id); const scEl=$('sc'), lvEl=$('lv'), llEl=$('ll'); const hint=stage.querySelector('#hint'); const btnStart=$('start'), btnPause=$('pause'), btnReset=$('reset'), btnFS=$('fs');
+        let running=false, paused=false, score=0, lives=3, level=1; const paddle={w:120,h:14,x:0,y:0,speed:560}; const ball={x:0,y:0,r:8,vx:300,vy:-300,speedUp:1.045,maxSpeed:880}; const bricks={rows:4,cols:8,w:64,h:22,gap:8,top:70,left:16,list:[]}; function stats(){ scEl.textContent=score; lvEl.textContent=lives; llEl.textContent=level; }
+        function layout(){ const W=cv.clientWidth,H=cv.clientHeight; paddle.w=Math.max(80,Math.min(180,Math.round(W*0.22))); paddle.x=(W-paddle.w)/2; paddle.y=H-40; bricks.cols=Math.round(Math.max(6,Math.min(12,W/90))); bricks.rows=3+Math.min(5,Math.floor(level/2)); bricks.w=Math.floor((W-32-(bricks.cols-1)*bricks.gap)/bricks.cols); bricks.h=22; bricks.list=[]; for(let r=0;r<bricks.rows;r++){ for(let c=0;c<bricks.cols;c++){ const x=bricks.left+c*(bricks.w+bricks.gap); const y=bricks.top+r*(bricks.h+bricks.gap); const strength=1+Math.floor((level-1)/2)+(Math.random()<.15?1:0); bricks.list.push({x,y,w:bricks.w,h:bricks.h,alive:true,strength}); } } }
+        function resetBall(){ const W=cv.clientWidth,H=cv.clientHeight; ball.x=W/2; ball.y=H-60; const base=280+(level-1)*20; const ang=(Math.random()*0.6+0.2)*Math.PI; const sp=base; ball.vx=Math.cos(ang)*sp*(Math.random()<.5?1:-1); ball.vy=-Math.abs(Math.sin(ang)*sp); }
+        function resetGame(){ running=false; paused=false; score=0; lives=3; level=1; layout(); resetBall(); stats(); hint.textContent='Tekan Start untuk mula'; }
+        function startGame(){ if(!running){ running=true; paused=false; hint.textContent=''; } }
+        function togglePause(){ paused=!paused; hint.textContent=paused?'Paused':''; }
+        function moveTo(clientX){ const r=cv.getBoundingClientRect(); const x=clientX-r.left; paddle.x=Math.max(0,Math.min(r.width-paddle.w,x-paddle.w/2)); }
+        cv.addEventListener('mousemove',e=>moveTo(e.clientX)); cv.addEventListener('touchstart',e=>moveTo(e.touches[0].clientX),{passive:true}); cv.addEventListener('touchmove',e=>moveTo(e.touches[0].clientX),{passive:true});
+        let keyLeft=false,keyRight=false; const kdn=e=>{ if(e.key==='ArrowLeft'||e.key==='a') keyLeft=true; if(e.key==='ArrowRight'||e.key==='d') keyRight=true; if(e.key===' '){ e.preventDefault(); startGame(); } }; const kup=e=>{ if(e.key==='ArrowLeft'||e.key==='a') keyLeft=false; if(e.key==='ArrowRight'||e.key==='d') keyRight=false; };
+        window.addEventListener('keydown',kdn); window.addEventListener('keyup',kup);
+        function update(dt){ if(!running||paused) return; const W=cv.clientWidth,H=cv.clientHeight; if(keyLeft) paddle.x=Math.max(0,paddle.x-paddle.speed*dt); if(keyRight) paddle.x=Math.min(W-paddle.w,paddle.x+paddle.speed*dt); ball.x+=ball.vx*dt; ball.y+=ball.vy*dt; if(ball.x-ball.r<0){ball.x=ball.r;ball.vx=Math.abs(ball.vx);} if(ball.x+ball.r>W){ball.x=W-ball.r;ball.vx=-Math.abs(ball.vx);} if(ball.y-ball.r<0){ball.y=ball.r;ball.vy=Math.abs(ball.vy);} if(ball.y-ball.r>H){ lives--; stats(); if(navigator.vibrate) navigator.vibrate(28); if(lives<=0){ running=false; hint.textContent='Game Over — tekan Reset'; return;} resetBall(); hint.textContent='Nyawa tinggal '+lives; setTimeout(()=>hint.textContent='',800);} const p=paddle; if(ball.vy>0 && ball.y+ball.r>=p.y && ball.y-ball.r<=p.y+p.h && ball.x>=p.x && ball.x<=p.x+p.w){ const hit=(ball.x-(p.x+p.w/2))/(p.w/2); const ang=hit*(Math.PI/3); const speed=Math.min(Math.hypot(ball.vx,ball.vy)*ball.speedUp,ball.maxSpeed); ball.vx=Math.sin(ang)*speed; ball.vy=-Math.abs(Math.cos(ang)*speed); ball.y=p.y-ball.r-0.1; if(navigator.vibrate) navigator.vibrate(8);} let aliveLeft=0; for(const b of bricks.list){ if(!b.alive) continue; aliveLeft++; const cx=Math.max(b.x,Math.min(ball.x,b.x+b.w)); const cy=Math.max(b.y,Math.min(ball.y,b.y+b.h)); const dx=ball.x-cx, dy=ball.y-cy; if(dx*dx+dy*dy<=ball.r*ball.r){ const ox=Math.min(Math.abs((ball.x+ball.r)-b.x),Math.abs((b.x+b.w)-(ball.x-ball.r))); const oy=Math.min(Math.abs((ball.y+ball.r)-b.y),Math.abs(( (b.y+b.h)-(ball.y-ball.r)))); if(ox<oy) ball.vx*=-1; else ball.vy*=-1; b.strength--; score+=(b.strength<=0)?10:5; if(b.strength<=0) b.alive=false; stats(); if(navigator.vibrate) navigator.vibrate(5);} } if(aliveLeft===0){ running=false; level++; stats(); hint.textContent='Level '+level+' — ready!'; layout(); resetBall(); setTimeout(()=>{ running=true; hint.textContent=''; },500);} }
+        function rr(x,y,w,h,r,fill){ ctx.beginPath(); ctx.moveTo(x+r,y); ctx.arcTo(x+w,y,x+w,y+h,r); ctx.arcTo(x+w,y+h,x,y+h,r); ctx.arcTo(x,y+h,x,y,r); ctx.arcTo(x,y,x+w,y,r); ctx.closePath(); fill?ctx.fill():ctx.stroke(); }
+        function draw(){ const W=cv.clientWidth,H=cv.clientHeight; ctx.clearRect(0,0,W,H); ctx.strokeStyle='rgba(2,132,199,.06)'; ctx.lineWidth=1; for(let x=0;x<W;x+=40){ ctx.beginPath(); ctx.moveTo(x,0); ctx.lineTo(x,H); ctx.stroke(); } for(let y=0;y<H;y+=40){ ctx.beginPath(); ctx.moveTo(0,y); ctx.lineTo(0,y); ctx.lineTo(W,y); ctx.stroke(); } const colors=['#22c55e','#06b6d4','#8b5cf6','#eab308','#ef4444','#f97316']; for(const b of bricks.list){ if(!b.alive) continue; ctx.fillStyle=colors[(Math.floor(b.y/10)+Math.floor(b.x/20)+b.strength)%colors.length]; rr(b.x,b.y,b.w,b.h,6,true); ctx.fillStyle='rgba(255,255,255,.28)'; rr(b.x+4,b.y+4,Math.max(18,b.w*(0.25+0.1*b.strength)),b.h/3,6,true);} ctx.fillStyle='#0ea5e9'; rr(paddle.x,paddle.y,paddle.w,paddle.h,8,true); const g=ctx.createLinearGradient(paddle.x,paddle.y,paddle.x,paddle.y+paddle.h); g.addColorStop(0,'rgba(255,255,255,.45)'); g.addColorStop(1,'rgba(255,255,255,0)'); ctx.fillStyle=g; rr(paddle.x,paddle.y,paddle.w,paddle.h/2,8,true); const gr=ctx.createRadialGradient(ball.x-3,ball.y-3,1,ball.x,ball.y,ball.r); gr.addColorStop(0,'rgba(14,165,233,.9)'); gr.addColorStop(1,'rgba(14,165,233,.5)'); ctx.fillStyle=gr; ctx.beginPath(); ctx.arc(ball.x,ball.y,ball.r,0,Math.PI*2); ctx.fill(); ctx.strokeStyle='rgba(255,255,255,.9)'; ctx.beginPath(); ctx.arc(ball.x-2,ball.y-2,ball.r*.5,0,Math.PI*2); ctx.stroke(); ctx.fillStyle='rgba(2,132,199,.08)'; ctx.fillRect(0,50,W,2); }
+        resetGame(); let raf,last=performance.now(); function loop(t){ const now=t||performance.now(); const dt=Math.min(0.033,(now-last)/1000); last=now; update(dt); draw(); raf=requestAnimationFrame(loop);} raf=requestAnimationFrame(loop);
+        return { start: startGame, pause: togglePause, reset: resetGame, cleanup(){ cancelAnimationFrame(raf); ro.disconnect(); window.removeEventListener('keydown',kdn); window.removeEventListener('keyup',kup); } };
+      }
+
+      // ===== Game 3: Flappy ===== (penuh seperti sebelum ni)
+      function initFlappy(container, controls){ /* guna versi penuh sebelum ini */ return initFlappyFull(container, controls); }
+      function initFlappyFull(container, controls){
+        const wrap=document.createElement('div');
+        wrap.innerHTML=`<div class="flex items-center justify-between flex-wrap gap-2"><h2 class="m-0 text-lg">🐦 Flappy Bird — Tap to Start</h2><div class="flex gap-2"><button id="reset" class="px-3 py-2 rounded-lg border">Reset</button><button id="pause" class="px-3 py-2 rounded-lg border">Pause</button></div></div><div class="flex flex-wrap gap-4 mt-2 text-sm text-slate-600"><div>Skor: <b id="sc">0</b></div><div>Level: <b id="lv">1</b></div><div>Rekod: <b id="best">0</b></div><div id="status" class="grow">Tap/klik/Space untuk mula • Tap lagi untuk “flap”</div></div>`;
+        controls.appendChild(wrap);
+        const stage=document.createElement('div'); stage.className='relative'; stage.innerHTML=`<canvas id="cv" class="arc" style="height:65vh"></canvas><div class="pointer-events-none absolute left-0 right-0 top-3 text-center text-xs text-slate-600">Elakkan paip. Level naik setiap 5 skor → laju & gap makin sempit.</div>`; container.appendChild(stage);
+        const overlay=document.createElement('div'); overlay.className='overlay fixed inset-0 hidden items-center justify-center bg-black/60 z-10'; overlay.innerHTML=`<div class="bg-white/95 border border-slate-200 rounded-2xl p-6 text-center shadow-2xl min-w-[260px] max-w-[90%]"><h3 class="text-2xl tracking-widest font-semibold">GAME OVER</h3><p>Skor: <b id="msgScore">0</b></p><p>Rekod: <b id="msgBest">0</b></p><div class="flex gap-2 justify-center mt-3"><button id="again" class="px-3 py-2 rounded-lg bg-sky-600 text-white">Main Semula</button><button id="closePop" class="px-3 py-2 rounded-lg border">Tutup</button></div></div>`; document.body.appendChild(overlay);
+        const cv=stage.querySelector('#cv'); const ctx=cv.getContext('2d',{alpha:true}); function size(){ const r=cv.getBoundingClientRect(); const dpr=Math.max(1,window.devicePixelRatio||1); cv.width=Math.max(1,Math.round(r.width*dpr)); cv.height=Math.max(1,Math.round(r.height*dpr)); ctx.setTransform(dpr,0,0,dpr,0,0);} size(); const ro=new ResizeObserver(()=>{ size(); reset(false); }); ro.observe(cv);
+        const $=id=>wrap.querySelector('#'+id); const scEl=$('sc'), lvEl=$('lv'), bestEl=$('best'), statusEl=wrap.querySelector('#status'); const btnPause=wrap.querySelector('#pause'), btnReset=wrap.querySelector('#reset'); const againBtn=overlay.querySelector('#again'), closePop=overlay.querySelector('#closePop'); const msgScore=overlay.querySelector('#msgScore'), msgBest=overlay.querySelector('#msgBest');
+        let running=false, paused=false, waitingStart=true; let score=0, best=0, level=1; let pipes=[], tSpawn=0; const bird={x:0,y:0,r:10,vy:0}; const GRAV=1000, FLAP_VY=-300; const base={speed:220,gap:180,spawn:1.3}; function levelParams(lv){ const speed=base.speed+(lv-1)*30; const gap=Math.max(120, base.gap-(lv-1)*10); const spawn=Math.max(0.9, base.spawn-(lv-1)*0.04); return {speed,gap,spawn}; }
+        function setStats(){ scEl.textContent=score; lvEl.textContent=level; bestEl.textContent=best; }
+        function hidePopup(){ overlay.classList.add('hidden'); }
+        function showPopup(){ msgScore.textContent=score; msgBest.textContent=best; overlay.classList.remove('hidden'); }
+        function reset(showMsg=true){ hidePopup(); const W=cv.clientWidth,H=cv.clientHeight; waitingStart=true; running=false; paused=false; score=0; level=1; pipes=[]; tSpawn=0; bird.x=W*0.3; bird.y=H*0.5; bird.vy=0; setStats(); if(showMsg) statusEl.textContent='Tap/klik/Space untuk mula • Tap lagi untuk “flap”'; }
+        function startIfNeeded(){ if(waitingStart){ waitingStart=false; running=true; paused=false; statusEl.textContent=''; } }
+        function flapAction(){ startIfNeeded(); if(!running||paused) return; bird.vy=FLAP_VY; if(navigator.vibrate) navigator.vibrate(6); }
+        cv.addEventListener('mousedown', flapAction); cv.addEventListener('touchstart', e=>{ flapAction(); }, {passive:true});
+        const kdown=e=>{ if(e.key===' '){ e.preventDefault(); flapAction(); } if(e.key==='p'){ paused=!paused; statusEl.textContent=paused?'Paused':''; } }; window.addEventListener('keydown', kdown);
+        btnPause.addEventListener('click', ()=>{ if(!waitingStart){ paused=!paused; statusEl.textContent=paused?'Paused':''; }}); btnReset.addEventListener('click', ()=> reset()); againBtn.addEventListener('click', ()=>{ reset(false); hidePopup(); }); closePop.addEventListener('click', ()=>{ hidePopup(); statusEl.textContent='Tap/klik/Space untuk mula • Tap lagi untuk “flap”'; });
+        function spawnPipe(){ const W=cv.clientWidth,H=cv.clientHeight; const {gap}=levelParams(level); const mid=H*0.35+Math.random()*(H*0.3); const topH=Math.max(30, mid-gap/2); const botY=mid+gap/2; const w=Math.max(46, Math.min(64, W*0.12)); pipes.push({x:W+40,w,top:topH,botY,passed:false}); }
+        function circleRectHit(cx,cy,cr,rx,ry,rw,rh){ const nx=Math.max(rx,Math.min(cx,rx+rw)); const ny=Math.max(ry,Math.min(cy,ry+rh)); const dx=cx-nx, dy=cy-ny; return (dx*dx+dy*dy)<=cr*cr; }
+        function update(dt){ if(!running||paused) return; const W=cv.clientWidth,H=cv.clientHeight; const {speed,spawn}=levelParams(level); bird.vy += GRAV*dt; bird.y += bird.vy*dt; tSpawn+=dt; if(tSpawn>=spawn){ tSpawn=0; spawnPipe(); } for(const p of pipes) p.x -= speed*dt; pipes = pipes.filter(p=>p.x+p.w>-50); if(bird.y-bird.r<0){ bird.y=bird.r; bird.vy=0; } if(bird.y+bird.r>H){ return gameOver(); } for(const p of pipes){ if(!p.passed && bird.x>p.x+p.w){ p.passed=true; score++; const newLevel=1+Math.floor(score/5); if(newLevel!==level) level=newLevel; if(navigator.vibrate) navigator.vibrate(4); setStats(); } if(circleRectHit(bird.x,bird.y,bird.r, p.x,0,p.w,p.top)) return gameOver(); if(circleRectHit(bird.x,bird.y,bird.r, p.x,p.botY,p.w,H-p.botY)) return gameOver(); } }
+        function draw(){ const W=cv.clientWidth,H=cv.clientHeight; ctx.clearRect(0,0,W,H); ctx.fillStyle='rgba(2,132,199,.08)'; ctx.fillRect(0,H-40,W,2); for(const p of pipes){ ctx.fillStyle='#10b981'; ctx.fillRect(p.x,0,p.w,p.top); ctx.fillRect(p.x,p.botY,p.w,H-p.botY); ctx.fillStyle='rgba(255,255,255,.25)'; ctx.fillRect(p.x,p.top-6,p.w,4); ctx.fillRect(p.x,p.botY+2,p.w,4); } const g=ctx.createRadialGradient(bird.x-4,bird.y-4,1,bird.x,bird.y,bird.r); g.addColorStop(0,'#f59e0b'); g.addColorStop(1,'#f97316'); ctx.fillStyle=g; ctx.beginPath(); ctx.arc(bird.x,bird.y,bird.r,0,Math.PI*2); ctx.fill(); ctx.fillStyle='#fff'; ctx.beginPath(); ctx.arc(bird.x+4,bird.y-4,3,0,Math.PI*2); ctx.fill(); ctx.fillStyle='#111'; ctx.beginPath(); ctx.arc(bird.x+5,bird.y-4,1.5,0,Math.PI*2); ctx.fill(); ctx.fillStyle='#facc15'; ctx.beginPath(); ctx.moveTo(bird.x+bird.r,bird.y); ctx.lineTo(bird.x+bird.r+6,bird.y+3); ctx.lineTo(bird.x+bird.r,bird.y+6); ctx.closePath(); ctx.fill(); ctx.fillStyle='rgba(15,23,42,.08)'; ctx.fillRect(0,48,W,1); }
+        function gameOver(){ running=false; waitingStart=true; best=Math.max(best,score); setStats(); if(navigator.vibrate) navigator.vibrate(40); showPopup(); }
+        reset(false); let raf,last=performance.now(); function loop(t){ const now=t||performance.now(); const dt=Math.min(0.033,(now-last)/1000); last=now; update(dt); draw(); raf=requestAnimationFrame(loop);} raf=requestAnimationFrame(loop);
+        return { start(){ startIfNeeded(); }, pause(){ if(!waitingStart){ paused=!paused; statusEl.textContent=paused?'Paused':''; } }, reset(){ reset(); }, cleanup(){ cancelAnimationFrame(raf); ro.disconnect(); window.removeEventListener('keydown', kdown); overlay.remove(); } };
+      }
+
+      // ===== Game 4: Pop‑the‑Dot =====
+      function initPopDot(container, controls){
+        const root=document.createElement('div'); root.className='pop-root';
+        root.innerHTML=`<div class="game-container mx-auto"><h1>Pop-the-Dot!</h1><p>Klik bulatan oren untuk tambah skor. Level naik ikut milestone skor.</p><div class="stats"><div class="stat-item">Masa: <span id="time">30</span>s</div><div class="stat-item">Level: <span id="lvl">1</span></div><div class="stat-item">Skor: <span id="scr">0</span></div></div><div class="game-grid" id="grid"></div><div class="mt-4"><button id="start" class="px-4 py-2 rounded-xl text-white" style="background:var(--primary)">Start Game</button></div></div><div class="message-box" id="mbox"><div class="message-content"><h2 id="mtitle">Game Over!</h2><p>Skor: <span id="final">0</span></p><p>Level: <span id="fl">1</span></p><button id="again" class="px-4 py-2 rounded-xl text-white mt-2" style="background:var(--primary)">Main lagi</button></div></div>`;
+        container.appendChild(root);
+        const GAME_DURATION=30, HOLE_COUNT=9; const BASE_APPEAR=700, BASE_INTERVAL=1000; const PTS_PER_LEVEL=10, REDUCE_PER_LEVEL=50, MIN_INTERVAL=400;
+        let score=0, level=1, timeLeft=GAME_DURATION, active=false, paused=false, lastHole=null, popTimer=null, tTimer=null, appearTime=BASE_APPEAR;
+        const grid=root.querySelector('#grid'); const sDisp=root.querySelector('#scr'); const tDisp=root.querySelector('#time'); const lDisp=root.querySelector('#lvl'); const btn=root.querySelector('#start'); const modal=root.querySelector('#mbox'); const final=root.querySelector('#final'); const fl=root.querySelector('#fl'); const again=root.querySelector('#again');
+        function calc(level){ const reduction=(level-1)*REDUCE_PER_LEVEL; const interval=Math.max(BASE_INTERVAL-reduction, MIN_INTERVAL); const aReduc=(level-1)*30; const appear=Math.max(BASE_APPEAR-aReduc, interval-150); return {interval, appear}; }
+        function startPop(){ clearInterval(popTimer); const d=calc(level); appearTime=d.appear; popTimer=setInterval(popOnce, d.interval); }
+        function maybeLevelUp(){ const need=level*PTS_PER_LEVEL; if(score>=need){ level++; lDisp.textContent=level; startPop(); } }
+        function createHoles(){ grid.innerHTML=''; for(let i=0;i<HOLE_COUNT;i++){ const hole=document.createElement('div'); hole.className='hole'; hole.dataset.id=i; const mole=document.createElement('div'); mole.className='mole'; mole.addEventListener('click', handlePop); hole.appendChild(mole); grid.appendChild(hole); } }
+        function pickRandom(){ const holes=grid.querySelectorAll('.hole'); const idx=Math.floor(Math.random()*holes.length); const h=holes[idx]; if(h===lastHole) return pickRandom(); lastHole=h; return h; }
+        function popOnce(){ if(!active||paused) return; const h=pickRandom(); const m=h.querySelector('.mole'); h.classList.add('up'); setTimeout(()=>{ if(h.classList.contains('up')){ h.classList.remove('up'); m.classList.remove('popped'); } }, appearTime); }
+        function handlePop(e){ if(!active||paused) return; const m=e.currentTarget; const h=m.closest('.hole'); if(h && h.classList.contains('up')){ score++; sDisp.textContent=score; maybeLevelUp(); m.classList.add('popped'); h.classList.remove('up'); setTimeout(()=>m.classList.remove('popped'),100); } }
+        function tick(){ if(!active||paused) return; timeLeft--; tDisp.textContent=timeLeft; if(timeLeft<=0) endGame(); }
+        function start(){ if(active) return; score=0; level=1; timeLeft=GAME_DURATION; active=true; paused=false; sDisp.textContent=score; tDisp.textContent=timeLeft; lDisp.textContent=level; btn.textContent='Playing...'; btn.disabled=true; clearInterval(popTimer); clearInterval(tTimer); startPop(); tTimer=setInterval(tick,1000); }
+        function endGame(){ active=false; paused=false; clearInterval(popTimer); clearInterval(tTimer); grid.querySelectorAll('.hole').forEach(h=>h.classList.remove('up')); final.textContent=score; fl.textContent=level; btn.textContent='Start Game'; btn.disabled=false; modal.classList.add('visible'); }
+        function pauseToggle(){ if(!active) return; paused=!paused; if(!paused){ startPop(); clearInterval(tTimer); tTimer=setInterval(tick,1000); } else { clearInterval(popTimer); clearInterval(tTimer); } }
+        function closeModal(){ modal.classList.remove('visible'); }
+        createHoles(); btn.addEventListener('click', start); again.addEventListener('click', ()=>{ closeModal(); start(); });
+        return { start, pause: pauseToggle, reset(){ closeModal(); active=false; paused=false; clearInterval(popTimer); clearInterval(tTimer); createHoles(); score=0; level=1; timeLeft=GAME_DURATION; sDisp.textContent=0; lDisp.textContent=1; tDisp.textContent=GAME_DURATION; btn.textContent='Start Game'; btn.disabled=false; }, cleanup(){ clearInterval(popTimer); clearInterval(tTimer); } };
+      }
+
+      function loadSelected(){ const v=gameSelect.value; if(v==='bubble') mount(initBubble); else if(v==='bricks') mount(initBricks); else if(v==='flappy') mount(initFlappy); else mount(initPopDot); }
+      gameSelect.addEventListener('change', loadSelected); loadSelected();
+    })();
+  };
+  </script>
+</body>
+</html>
