@@ -47,37 +47,36 @@
 <!-- Header -->
 <header class="sticky top-0 z-50 bg-white/80 backdrop-blur border-b border-slate-100">
   <nav class="container mx-auto px-4 py-3 flex items-center justify-between">
-<a href="#" class="flex flex-col items-center font-semibold tracking-wide text-center">
-  <div class="flex items-center gap-3">
-    <!-- Logo Prudential -->
-    <img src="https://i.ibb.co/zTsc152b/unnamed.jpg" alt="Logo Prudential" class="w-16 h-8 object-contain" />
-    <!-- Logo Shazay -->
-    <img src="https://i.ibb.co/0pCRzt0b/8284c3c0-29c5-11ed-b68f-96d3f09e23e7.jpg" alt="Logo Shazay" class="w-8 h-8 rounded-full object-cover" />
-  </div>
-  <span class="mt-1 text-sm md:text-base">Takaful Prudential</span>
+    <a href="#" class="flex items-center gap-3 font-semibold tracking-wide">
+      <!-- ✅ Susunan baru: logo Prudential + Shazay + teks Takaful Prudential dalam satu baris -->
+      <img src="https://i.ibb.co/zTsc152b/unnamed.jpg" 
+           alt="Logo Prudential" 
+           class="w-24 h-12 object-contain" /> <!-- ✅ Dibesar dari 16x8 ke 24x12 -->
 
-      </a>
-      <button id="menuBtn" class="md:hidden p-2 rounded-lg border border-slate-200" aria-label="Menu">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
-      </button>
-      <ul id="menu" class="hidden md:flex items-center gap-6 text-sm">
-        <li><a class="hover:text-sky-600" href="#manfaat">Manfaat</a></li>
-        <li><a class="hover:text-sky-600" href="#pelan">Pelan</a></li>
-        <li><a class="hover:text-sky-600" href="#soalan">FAQ</a></li>
-        <li><a class="hover:text-sky-600" href="#hubungi">Hubungi</a></li>
-        <li><a class="px-4 py-2 rounded-xl bg-sky-600 text-white hover:bg-sky-700" href="#hubungi">Dapatkan Sebut Harga</a></li>
-      </ul>
-    </nav>
-    <div id="menuMobile" class="hidden md:hidden border-t border-slate-100">
-      <ul class="container mx-auto px-4 py-3 grid gap-3 text-sm">
-        <li><a class="block py-2" href="#manfaat">Manfaat</a></li>
-        <li><a class="block py-2" href="#pelan">Pelan</a></li>
-        <li><a class="block py-2" href="#soalan">FAQ</a></li>
-        <li><a class="block py-2" href="#hubungi">Hubungi</a></li>
-        <li><a class="inline-flex justify-center px-4 py-2 rounded-xl bg-sky-600 text-white" href="#hubungi">Dapatkan Sebut Harga</a></li>
-      </ul>
-    </div>
-  </header>
+      <img src="https://i.ibb.co/0pCRzt0b/8284c3c0-29c5-11ed-b68f-96d3f09e23e7.jpg" 
+           alt="Logo Shazay" 
+           class="w-12 h-12 rounded-full object-cover" /> <!-- ✅ Dibesar dari 8x8 ke 12x12 -->
+
+      <span class="text-base md:text-lg font-medium text-slate-800 whitespace-nowrap">
+        Takaful Prudential
+      </span>
+    </a>
+
+    <button id="menuBtn" class="md:hidden p-2 rounded-lg border border-slate-200" aria-label="Menu">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+      </svg>
+    </button>
+
+    <ul id="menu" class="hidden md:flex items-center gap-6 text-sm">
+      <li><a class="hover:text-sky-600" href="#manfaat">Manfaat</a></li>
+      <li><a class="hover:text-sky-600" href="#pelan">Pelan</a></li>
+      <li><a class="hover:text-sky-600" href="#soalan">FAQ</a></li>
+      <li><a class="hover:text-sky-600" href="#hubungi">Hubungi</a></li>
+      <li><a class="px-4 py-2 rounded-xl bg-sky-600 text-white hover:bg-sky-700" href="#hubungi">Dapatkan Sebut Harga</a></li>
+    </ul>
+  </nav>
+</header>
 
   <!-- Hero -->
   <section class="relative">
