@@ -48,11 +48,12 @@
 <header class="sticky top-0 z-50 bg-white/80 backdrop-blur border-b border-slate-100">
   <nav class="container mx-auto px-4 py-3 flex items-center justify-between">
     <a href="#" class="flex items-center gap-3 font-semibold tracking-wide">
-      <!-- ✅ Susunan baru: logo Prudential + Shazay + teks Takaful Prudential dalam satu baris -->
+      <!-- Logo Prudential -->
       <img src="https://i.ibb.co/zTsc152b/unnamed.jpg" 
            alt="Logo Prudential" 
-           class="w-26 h-16 object-contain" /> 
+           class="w-[104px] h-16 object-contain" /> 
 
+      <!-- Logo Shazay -->
       <img src="https://i.ibb.co/0pCRzt0b/8284c3c0-29c5-11ed-b68f-96d3f09e23e7.jpg" 
            alt="Logo Shazay" 
            class="w-14 h-14 rounded-full object-cover" /> 
@@ -210,8 +211,8 @@
             <input id="pekerjaan" class="mt-1 w-full rounded-xl border border-slate-300 px-3 py-2" type="text" />
           </div>
           <div>
-            <label class="text-sm" for="Pelan/Perlindungan">Pelan/Perlindungan</label>
-            <select id="Pelan/Perlindungan" class="mt-1 w-full rounded-xl border border-slate-300 px-3 py-2">
+            <label class="text-sm" for="planType">Pelan/Perlindungan</label>
+            <select id="planType" class="mt-1 w-full rounded-xl border border-slate-300 px-3 py-2">
               <option>Medical Card</option>
               <option>Hibah</option>
               <option>Penyakit Kritikal</option>
@@ -279,17 +280,19 @@
     // Tahun footer
     document.getElementById('y').textContent = new Date().getFullYear();
 
-    // Menu mobile
+    // Menu mobile: gunakan id="menu" yang wujud
     const menuBtn = document.getElementById('menuBtn');
-    const menuMobile = document.getElementById('menuMobile');
-    if (menuBtn && menuMobile) {
-      menuBtn.addEventListener('click', () => menuMobile.classList.toggle('hidden'));
-      menuMobile.querySelectorAll('a').forEach(a => a.addEventListener('click', () => menuMobile.classList.add('hidden')));
+    const menuEl  = document.getElementById('menu');
+    if (menuBtn && menuEl) {
+      menuBtn.addEventListener('click', () => menuEl.classList.toggle('hidden'));
+      menuEl.querySelectorAll('a').forEach(a =>
+        a.addEventListener('click', () => menuEl.classList.add('hidden'))
+      );
     }
 
     // Prefill plan → form
     function prefillPlan(plan) {
-      document.getElementById('Pelan/Perlindungan').value = 'Medical Card';
+      document.getElementById('planType').value = 'Medical Card';
       document.querySelector('form').dataset.selectedPlan = plan;
       document.getElementById('hubungi').scrollIntoView({behavior: 'smooth'});
     }
@@ -297,18 +300,28 @@
     // Hantar WhatsApp
     function openWA(e) {
       e.preventDefault();
-      const phone = '601125517767';
-      const form = document.querySelector('form');
-      const nama = document.getElementById('nama').value.trim();
-      const umur = document.getElementById('umur').value.trim();
-      const pekerjaan = (document.getElementById('pekerjaan').value || '-').trim();
-      const Pelan/Perlindungan = document.getElementById(' Pelan/Perlindungan ').value.trim();
-      const bajet = (document.getElementById('bajet').value || '-').trim();
-      const plan = form.dataset.selectedPlan ? `\nPelan Pilihan: ${form.dataset.selectedPlan}` : '';
+      const phone      = '601125517767';
+      const form       = document.querySelector('form');
+      const nama       = document.getElementById('nama').value.trim();
+      const umur       = document.getElementById('umur').value.trim();
+      const pekerjaan  = (document.getElementById('pekerjaan').value || '-').trim();
+      const planType   = document.getElementById('planType').value.trim();
+      const bajet      = (document.getElementById('bajet').value || '-').trim();
+      const planPicked = form.dataset.selectedPlan ? `\nPelan Pilihan: ${form.dataset.selectedPlan}` : '';
+
       if (!nama || !umur) { alert('Sila isi Nama dan Umur.'); return; }
-      const msg = `Assalamualaikum, saya ${nama}.\nUmur: ${umur}\nPekerjaan: ${pekerjaan}\nPelan/Perlindungan: ${Pelan/Perlindungan}${plan}\nBajet: RM${bajet}/bulan\n\nMohon semak pelan yang sesuai. Terima kasih.`;
+
+      const msg = `Assalamualaikum, saya ${nama}.
+Umur: ${umur}
+Pekerjaan: ${pekerjaan}
+Pelan/Perlindungan: ${planType}${planPicked}
+Bajet: RM${bajet}/bulan
+
+Mohon semak pelan yang sesuai. Terima kasih.`;
+
       const url = `https://wa.me/${phone}?text=${encodeURIComponent(msg)}`;
-      window.open(url, '_blank', 'noopener') || (window.location.href = url);
+      const win = window.open(url, '_blank', 'noopener');
+      if (!win) window.location.href = url; // fallback jika popup dihalang
     }
 
     /* ===== Business card modal open/close ===== */
@@ -350,7 +363,19 @@
     btnFlip.addEventListener('click', ()=>{ flipped=!flipped; render(); });
     btnR.addEventListener('click', ()=>{ rotX=0; rotY=0; flipped=false; render(); autoSpin(true); });
 
-    function fitToImage(){ const nw = imgF.naturalWidth, nh = imgF.naturalHeight; if(!nw||!nh) return; const ratio = nh / nw; const maxW = Math.min(360, window.innerWidth - 48); const maxH = Math.min(560, window.innerHeight - 200); let w = maxW, h = w * ratio; if (h > maxH){ h = maxH; w = h / ratio; } scene.style.width = w + 'px'; scene.style.height = h + 'px'; card.style.width  = w + 'px'; card.style.height  = h + 'px'; }
+    function fitToImage(){
+      const nw = imgF.naturalWidth, nh = imgF.naturalHeight;
+      if(!nw||!nh) return;
+      const ratio = nh / nw;
+      const maxW = Math.min(360, window.innerWidth - 48);
+      const maxH = Math.min(560, window.innerHeight - 200);
+      let w = maxW, h = w * ratio;
+      if (h > maxH){ h = maxH; w = h / ratio; }
+      scene.style.width = w + 'px';
+      scene.style.height = h + 'px';
+      card.style.width  = w + 'px';
+      card.style.height = h + 'px';
+    }
     function initCard(){ fitToImage(); render(); }
     if (imgF.complete) initCard(); else imgF.addEventListener('load', initCard);
     window.addEventListener('resize', fitToImage);
