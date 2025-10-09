@@ -189,7 +189,7 @@
       <div class="grid md:grid-cols-2 gap-8 items-center">
         <div>
           <h2 class="text-2xl md:text-3xl font-semibold">Tanya kami, dapatkan cadangan tepat</h2>
-          <p class="mt-2 text-slate-300">Hantar umur, pekerjaan, bajet anggaran & keutamaan (medical/hibah/kritikal/kemalangan). Kami balas dengan pilihan yang jelas.</p>
+          <p class="mt-2 text-slate-300">Hantar umur, pekerjaan, bajet anggaran & Pelan/Perlindungan (medical/hibah/kritikal/kemalangan). Kami balas dengan pilihan yang jelas.</p>
           <div class="mt-6 flex flex-wrap gap-3">
             <a href="https://wa.me/601125517767" target="_blank" rel="noopener" class="px-5 py-3 rounded-xl bg-emerald-500 text-white hover:bg-emerald-600">WhatsApp</a>
             <a href="https://linktr.ee/hafizulca" target="_blank" rel="noopener" class="px-5 py-3 rounded-xl border border-white/30 text-white hover:bg-white/10">Linktree</a>
@@ -211,8 +211,8 @@
             <input id="pekerjaan" class="mt-1 w-full rounded-xl border border-slate-300 px-3 py-2" type="text" />
           </div>
           <div>
-            <label class="text-sm" for="keutamaan">Keutamaan</label>
-            <select id="keutamaan" class="mt-1 w-full rounded-xl border border-slate-300 px-3 py-2">
+            <label class="text-sm" for="Pelan/Perlindungan">Pelan/Perlindungan</label>
+            <select id="Pelan/Perlindungan" class="mt-1 w-full rounded-xl border border-slate-300 px-3 py-2">
               <option>Medical Card</option>
               <option>Hibah</option>
               <option>Penyakit Kritikal</option>
@@ -290,7 +290,7 @@
 
     // Prefill plan → form
     function prefillPlan(plan) {
-      document.getElementById('keutamaan').value = 'Medical Card';
+      document.getElementById('Pelan/Perlindungan').value = 'Medical Card';
       document.querySelector('form').dataset.selectedPlan = plan;
       document.getElementById('hubungi').scrollIntoView({behavior: 'smooth'});
     }
@@ -303,11 +303,11 @@
       const nama = document.getElementById('nama').value.trim();
       const umur = document.getElementById('umur').value.trim();
       const pekerjaan = (document.getElementById('pekerjaan').value || '-').trim();
-      const keutamaan = document.getElementById('keutamaan').value.trim();
+      const Pelan/Perlindungan = document.getElementById(' Pelan/Perlindungan ').value.trim();
       const bajet = (document.getElementById('bajet').value || '-').trim();
       const plan = form.dataset.selectedPlan ? `\nPelan Pilihan: ${form.dataset.selectedPlan}` : '';
       if (!nama || !umur) { alert('Sila isi Nama dan Umur.'); return; }
-      const msg = `Assalamualaikum, saya ${nama}.\nUmur: ${umur}\nPekerjaan: ${pekerjaan}\nKeutamaan: ${keutamaan}${plan}\nBajet: RM${bajet}/bulan\n\nMohon semak pelan yang sesuai. Terima kasih.`;
+      const msg = `Assalamualaikum, saya ${nama}.\nUmur: ${umur}\nPekerjaan: ${pekerjaan}\nPelan/Perlindungan: ${Pelan/Perlindungan}${plan}\nBajet: RM${bajet}/bulan\n\nMohon semak pelan yang sesuai. Terima kasih.`;
       const url = `https://wa.me/${phone}?text=${encodeURIComponent(msg)}`;
       window.open(url, '_blank', 'noopener') || (window.location.href = url);
     }
