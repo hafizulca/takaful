@@ -21,7 +21,7 @@
     .front { transform: translateZ(calc(var(--thk)/2)); }
     .back  { transform: rotateY(180deg) translateZ(calc(var(--thk)/2)); }
     .side { position:absolute; background: linear-gradient(180deg,#e5e7eb,#cbd5e1 60%,#94a3b8); box-shadow: inset 0 0 6px rgba(0,0,0,.12); }
-    .side.left   { width:var(--thk); height:100%; left:0;  top:0; transform: rotateY(-90deg) translateZ(calc(50% - var(--thk)/2)); transform-origin:left center;  border-radius:8px; }
+    .side.left    { width:var(--thk); height:100%; left:0;  top:0; transform: rotateY(-90deg) translateZ(calc(50% - var(--thk)/2)); transform-origin:left center;  border-radius:8px; }
     .side.right  { width:var(--thk); height:100%; right:0; top:0; transform: rotateY( 90deg) translateZ(calc(50% - var(--thk)/2)); transform-origin:right center; border-radius:8px; }
     .side.top    { height:var(--thk); width:100%; left:0;  top:0; transform: rotateX( 90deg) translateZ(calc(50% - var(--thk)/2)); transform-origin:center top;    border-radius:8px; background: linear-gradient(90deg,#e5e7eb,#cbd5e1 60%,#94a3b8); }
     .side.bottom { height:var(--thk); width:100%; left:0;  bottom:0; transform: rotateX(-90deg) translateZ(calc(50% - var(--thk)/2)); transform-origin:center bottom; border-radius:8px; background: linear-gradient(90deg,#e5e7eb,#cbd5e1 60%,#94a3b8); }
@@ -44,16 +44,13 @@
 </head>
 <body class="antialiased text-slate-800">
 
-<!-- Header -->
 <header class="sticky top-0 z-50 bg-white/80 backdrop-blur border-b border-slate-100">
   <nav class="container mx-auto px-4 py-3 flex items-center justify-between">
     <a href="#" class="flex items-center gap-3 font-semibold tracking-wide">
-      <!-- Logo Prudential -->
       <img src="https://i.ibb.co/zTsc152b/unnamed.jpg" 
            alt="Logo Prudential" 
            class="w-[104px] h-16 object-contain" /> 
 
-      <!-- Logo Shazay -->
       <img src="https://i.ibb.co/0pCRzt0b/8284c3c0-29c5-11ed-b68f-96d3f09e23e7.jpg" 
            alt="Logo Shazay" 
            class="w-14 h-14 rounded-full object-cover" /> 
@@ -79,7 +76,6 @@
   </nav>
 </header>
 
-  <!-- Hero -->
   <section class="relative">
     <div class="absolute inset-0 -z-10"><div class="w-full h-full bg-gradient-to-b from-sky-200 to-white"></div></div>
     <div class="container mx-auto px-4 py-20 md:py-28">
@@ -100,7 +96,6 @@
     </div>
   </section>
 
-  <!-- Manfaat -->
   <section id="manfaat" class="py-16 md:py-20">
     <div class="container mx-auto px-4">
       <div class="max-w-2xl">
@@ -116,7 +111,6 @@
     </div>
   </section>
 
-  <!-- Pelan -->
   <section id="pelan" class="py-16 md:py-20 bg-slate-50">
     <div class="container mx-auto px-4">
       <div class="max-w-2xl mb-10">
@@ -155,7 +149,6 @@
     </div>
   </section>
 
-  <!-- FAQ -->
   <section id="soalan" class="py-16 md:py-20">
     <div class="container mx-auto px-4">
       <div class="max-w-2xl mb-8">
@@ -183,7 +176,6 @@
     </div>
   </section>
 
-  <!-- Hubungi -->
   <section id="hubungi" class="py-16 md:py-20 bg-slate-900 text-white">
     <div class="container mx-auto px-4">
       <div class="grid md:grid-cols-2 gap-8 items-center">
@@ -203,8 +195,8 @@
             <input id="nama" class="mt-1 w-full rounded-xl border border-slate-300 px-3 py-2" type="text" required />
           </div>
           <div>
-            <label class="text-sm" for="umur">Umur</label>
-            <input id="umur" class="mt-1 w-full rounded-xl border border-slate-300 px-3 py-2" type="number" required />
+            <label class="text-sm" for="tarikhlahir">Tarikh Lahir</label>
+            <input id="tarikhlahir" class="mt-1 w-full rounded-xl border border-slate-300 px-3 py-2" type="date" required />
           </div>
           <div>
             <label class="text-sm" for="pekerjaan">Pekerjaan</label>
@@ -213,21 +205,16 @@
           <div>
             <label class="text-sm" for="planType">Pelan/Perlindungan</label>
             <select id="planType" class="mt-1 w-full rounded-xl border border-slate-300 px-3 py-2">
-              <option>Medical Card</option>
-              <option>Hibah</option>
-              <option>Penyakit Kritikal</option>
-              <option>Kemalangan</option>
-              <option>Gabungan</option>
+              <option>-- Sila Pilih Pelan --</option>
+              <option>Pelan Medikal Asas</option>
+              <option>Pakej Medikal + Hibah</option>
+              <option>Pelan Hibah Sahaja</option>
             </select>
-          </div>
-          <div>
-            <label class="text-sm" for="bajet">Bajet (RM/bulan)</label>
-            <input id="bajet" class="mt-1 w-full rounded-xl border border-slate-300 px-3 py-2" type="number" placeholder="contoh: 200" />
           </div>
           <button class="mt-2 px-5 py-3 rounded-xl bg-sky-600 text-white hover:bg-sky-700">Hantar di WhatsApp</button>
           <p class="text-xs text-slate-500">Dengan menghantar, anda bersetuju untuk dihubungi melalui WhatsApp bagi tujuan semakan pelan.</p>
         </form>
-      </div>
+        </div>
     </div>
   </section>
 
@@ -235,7 +222,6 @@
     © <span id="y"></span> Prudential Takaful. Hak cipta terpelihara.
   </footer>
 
-  <!-- ========= Business card badge (bottom-right) ========= -->
   <div id="bc-badge" class="float-badge" style="bottom:22px; right:18px;">
     <div class="speech hidden sm:block">Tanya saya 🚀</div>
     <button class="relative w-14 h-14 rounded-full ring-4 ring-white shadow-lg overflow-hidden focus:outline-none focus:ring-4 focus:ring-sky-300" aria-label="Buka kad bisnes">
@@ -244,7 +230,6 @@
     </button>
   </div>
 
-  <!-- Overlay + Modal Kad 3D -->
   <div id="bc-overlay" class="hidden fixed inset-0 z-[80] bg-black/40 backdrop-blur-sm"></div>
   <div id="bc-modal" class="hidden fixed inset-0 z-[90] p-4 grid place-items-center">
     <div class="glass rounded-2xl border border-white/30 shadow-2xl p-5 w-full max-w-xl relative">
@@ -265,7 +250,6 @@
     </div>
   </div>
 
-  <!-- Zoom overlay -->
   <div id="zoomOverlay" class="hidden fixed inset-0 z-[100] bg-black/80">
     <div id="zoomScroll" class="w-full h-full overflow-auto flex items-center justify-center p-4">
       <img id="zoomImg" class="fit select-none" src="" alt="">
@@ -292,7 +276,8 @@
 
     // Prefill plan → form
     function prefillPlan(plan) {
-      document.getElementById('planType').value = 'Medical Card';
+      // DIUBAH: Tukar value untuk padankan dengan <option> baru
+      document.getElementById('planType').value = 'Pelan Medikal Asas';
       document.querySelector('form').dataset.selectedPlan = plan;
       document.getElementById('hubungi').scrollIntoView({behavior: 'smooth'});
     }
@@ -303,19 +288,21 @@
       const phone      = '601125517767';
       const form       = document.querySelector('form');
       const nama       = document.getElementById('nama').value.trim();
-      const umur       = document.getElementById('umur').value.trim();
+      // DIUBAH: Ambil 'tarikhlahir' dan bukan 'umur'
+      const tarikhlahir = document.getElementById('tarikhlahir').value.trim();
       const pekerjaan  = (document.getElementById('pekerjaan').value || '-').trim();
       const planType   = document.getElementById('planType').value.trim();
-      const bajet      = (document.getElementById('bajet').value || '-').trim();
+      // DIHAPUS: Const 'bajet'
       const planPicked = form.dataset.selectedPlan ? `\nPelan Pilihan: ${form.dataset.selectedPlan}` : '';
 
-      if (!nama || !umur) { alert('Sila isi Nama dan Umur.'); return; }
+      // DIUBAH: Validasi untuk 'tarikhlahir'
+      if (!nama || !tarikhlahir) { alert('Sila isi Nama dan Tarikh Lahir.'); return; }
 
+      // DIUBAH: Mesej WhatsApp dikemaskini
       const msg = `Assalamualaikum, saya ${nama}.
-Umur: ${umur}
+Tarikh Lahir: ${tarikhlahir}
 Pekerjaan: ${pekerjaan}
 Pelan/Perlindungan: ${planType}${planPicked}
-Bajet: RM${bajet}/bulan
 
 Mohon semak pelan yang sesuai. Terima kasih.`;
 
@@ -399,5 +386,5 @@ Mohon semak pelan yang sesuai. Terima kasih.`;
     document.addEventListener('keydown', (e)=>{ if(!zoomOverlay.classList.contains('hidden') && e.key==='Escape') closeZoom(); });
     zoomOverlay.addEventListener('click', (e)=>{ if(e.target===zoomOverlay) closeZoom(); });
   </script>
-</body>
+  </body>
 </html>
